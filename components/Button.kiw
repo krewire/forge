@@ -1,5 +1,5 @@
 {{if .Href}}
-<a href="{{.Href}}" class="btn {{if .Variant}}btn-{{.Variant}}{{else}}btn-primary{{end}} {{if .Size}}btn-{{.Size}}{{else}}btn-md{{end}} {{.Class}}" {{with .Target}}target="{{.}}" rel="noopener"{{end}} {{if .Disabled}}aria-disabled="true" tabindex="-1"{{end}}>
+<a href="{{.Href}}" class="btn {{if .Variant}}btn-{{.Variant}}{{else}}btn-primary{{end}} {{if .Size}}btn-{{.Size}}{{else}}btn-md{{end}} {{.Class}}" {{with .Target}}target="{{.}}" rel="noopener"{{end}} {{if .Disabled}}aria-disabled="true" tabindex="-1"{{end}} {{with .DataI18n}}data-i18n="{{.}}"{{end}}>
   {{if .Body}}
     {{.Body}}
   {{else}}
@@ -9,7 +9,7 @@
   {{end}}
 </a>
 {{else}}
-<button type="{{with .Type}}{{.}}{{else}}button{{end}}" class="btn {{if .Variant}}btn-{{.Variant}}{{else}}btn-primary{{end}} {{if .Size}}btn-{{.Size}}{{else}}btn-md{{end}} {{.Class}}" {{if .Disabled}}disabled{{end}} {{with .OnClick}}onclick="{{.}}"{{end}} {{with .Id}}id="{{.}}"{{end}} {{with .AriaLabel}}aria-label="{{.}}"{{end}} {{with .AriaControls}}aria-controls="{{.}}"{{end}} {{with .AriaExpanded}}aria-expanded="{{.}}"{{end}} {{with .AriaPressed}}aria-pressed="{{.}}"{{end}}>
+<button type="{{with .Type}}{{.}}{{else}}button{{end}}" class="btn {{if .Variant}}btn-{{.Variant}}{{else}}btn-primary{{end}} {{if .Size}}btn-{{.Size}}{{else}}btn-md{{end}} {{.Class}}" {{if .Disabled}}disabled{{end}} {{with .OnClick}}onclick="{{.}}"{{end}} {{with .Id}}id="{{.}}"{{end}} {{with .AriaLabel}}aria-label="{{.}}"{{end}} {{with .AriaControls}}aria-controls="{{.}}"{{end}} {{with .AriaExpanded}}aria-expanded="{{.}}"{{end}} {{with .AriaPressed}}aria-pressed="{{.}}"{{end}} {{with .DataI18n}}data-i18n="{{.}}"{{end}}>
   {{if .Body}}
     {{.Body}}
   {{else}}
