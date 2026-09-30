@@ -22,18 +22,18 @@
       {{if .HideGitHub}}
       {{else}}
       <a href="{{if .GitHubURL}}{{.GitHubURL}}{{else}}https://github.com/krewire/krewire{{end}}" target="_blank" rel="noopener"
-         class="hidden md:inline-flex items-center gap-1.5 btn btn-primary text-xs px-4 py-2 min-h-0">
+         class="hidden lg:inline-flex items-center gap-1.5 btn btn-primary text-xs px-4 py-2 min-h-0">
         <span>★</span><span>GitHub</span>
       </a>
       {{end}}
       <ThemeSwitch />
-      <Hamburger ID="nav-toggler" Label="Toggle menu" Controls="nav-mobile-menu" Class="md:hidden" />
+      <Hamburger ID="nav-toggler" Label="Toggle menu" Controls="nav-mobile-menu" Class="lg:hidden" />
     </div>
   </div>
 
   <!-- Mobile navigation drawer -->
   <div id="nav-mobile-menu"
-       class="md:hidden opacity-0 pointer-events-none -translate-y-2 absolute top-full left-0 w-full bg-bg dark:bg-bg-dark border-b border-pop shadow-xl transition-all duration-200"
+       class="lg:hidden opacity-0 pointer-events-none -translate-y-2 absolute top-full left-0 w-full bg-bg dark:bg-bg-dark border-b border-pop shadow-xl transition-all duration-200"
        style="border-bottom:var(--pop-border)">
     <div class="container-site py-4 flex flex-col gap-1">
       {{if .MobileMenu}}

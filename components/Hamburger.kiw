@@ -31,6 +31,19 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
   user-select: none;
 }
+.hamburger.hidden {
+  display: none !important;
+}
+@media (min-width: 1024px) {
+  .hamburger.lg\:hidden {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) {
+  .hamburger.md\:hidden {
+    display: none !important;
+  }
+}
 .hamburger:hover {
   background: var(--bg-2, #f2ede4);
   transform: translate(-1px, -1px);
