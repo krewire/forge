@@ -1,29 +1,76 @@
-<Button Id=.ID
-        Class=.Class
-        Variant="outline"
-        AriaLabel=.Label
-        AriaExpanded=.Expanded
-        AriaControls=.Controls
-        OnClick=.OnClick>
-  <svg class="hamburger-open" viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-    <path d="M2.5 4h11M2.5 8h11M2.5 12h11"/>
-  </svg>
-  <svg class="hamburger-close" viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-    <path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/>
-  </svg>
-</Button>
+<button
+  type="button"
+  class="hamburger {{.Class}}"
+  {{with .ID}}id="{{.}}"{{end}}
+  aria-label="{{if .Label}}{{.Label}}{{else}}Toggle navigation{{end}}"
+  aria-expanded="{{if .Expanded}}{{.Expanded}}{{else}}false{{end}}"
+  {{with .Controls}}aria-controls="{{.}}"{{end}}
+  {{with .OnClick}}onclick="{{.}}"{{end}}
+  data-kiw-component="Hamburger">
+  <span class="hamburger-box" aria-hidden="true">
+    <span class="hamburger-line line-1"></span>
+    <span class="hamburger-line line-2"></span>
+    <span class="hamburger-line line-3"></span>
+  </span>
+</button>
 
 <style>
-.hamburger-open {
+.hamburger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: var(--radius-sm, 6px);
+  border: var(--pop-border-thin, 2px solid var(--border, #0B1F3B));
+  background: var(--bg, #FAF8F4);
+  color: var(--fg, #0B1F3B);
+  cursor: pointer;
+  box-shadow: var(--pop-sm, 2px 2px 0px var(--border, #0B1F3B));
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  user-select: none;
+}
+.hamburger:hover {
+  background: var(--bg-2, #f2ede4);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border, #0B1F3B);
+}
+.hamburger:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--border, #0B1F3B);
+}
+.hamburger-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 1.125rem;
+  height: 0.875rem;
+}
+.hamburger-line {
   display: block;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 1px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease-in-out;
+  transform-origin: center;
 }
-.hamburger-close {
-  display: none;
+
+/* Morphing animation to 'X' */
+.hamburger[aria-expanded="true"] .line-1,
+.hamburger.is-active .line-1 {
+  transform: translateY(6px) rotate(45deg);
 }
-[aria-expanded="true"] .hamburger-open {
-  display: none !important;
+.hamburger[aria-expanded="true"] .line-2,
+.hamburger.is-active .line-2 {
+  opacity: 0;
+  transform: scaleX(0);
 }
-[aria-expanded="true"] .hamburger-close {
-  display: block !important;
+.hamburger[aria-expanded="true"] .line-3,
+.hamburger.is-active .line-3 {
+  transform: translateY(-6px) rotate(-45deg);
 }
 </style>

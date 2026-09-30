@@ -17,7 +17,7 @@
         <span>★</span><span>GitHub</span>
       </a>
       <ThemeSwitch />
-      <Hamburger ID="nav-toggler" Label="Toggle menu" Controls="nav-mobile-menu" Class="md:hidden w-9 h-9 p-0 min-h-0 flex items-center justify-center" />
+      <Hamburger ID="nav-toggler" Label="Toggle menu" Controls="nav-mobile-menu" Class="md:hidden" />
     </div>
   </div>
 
