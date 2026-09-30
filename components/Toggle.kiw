@@ -1,33 +1,34 @@
-<button class="toggle md:hidden btn w-9 h-9 p-0 min-h-0 flex flex-col items-center justify-center gap-1 {{.Class}}"
+<button class="toggle md:hidden btn w-9 h-9 p-0 min-h-0 flex items-center justify-center {{.Class}}"
         id="{{if .ID}}{{.ID}}{{else}}nav-toggler{{end}}"
         aria-label="{{if .Label}}{{.Label}}{{else}}Toggle navigation menu{{end}}"
         aria-expanded="false"
         {{with .Controls}}aria-controls="{{.}}"{{end}}>
-  {{if eq .Variant "sidebar"}}
-  <svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
-  {{else}}
-  <span class="toggler-bar bar-1"></span>
-  <span class="toggler-bar bar-2"></span>
-  <span class="toggler-bar bar-3"></span>
-  {{end}}
+  <svg class="icon-hamburger" viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+    <path d="M2.5 4h11M2.5 8h11M2.5 12h11"/>
+  </svg>
+  <svg class="icon-close" viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+    <path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/>
+  </svg>
 </button>
 
 <style>
-.toggler-bar {
+@media (min-width: 768px) {
+  .toggle, .toggler {
+    display: none !important;
+  }
+}
+.icon-hamburger {
   display: block;
-  width: 16px;
-  height: 2px;
-  background: currentColor;
-  border-radius: 2px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
 }
-.toggle[aria-expanded="true"] .bar-1 {
-  transform: translateY(6px) rotate(45deg);
+.icon-close {
+  display: none;
 }
-.toggle[aria-expanded="true"] .bar-2 {
-  opacity: 0;
+.toggle[aria-expanded="true"] .icon-hamburger,
+[aria-expanded="true"] .icon-hamburger {
+  display: none !important;
 }
-.toggle[aria-expanded="true"] .bar-3 {
-  transform: translateY(-6px) rotate(-45deg);
+.toggle[aria-expanded="true"] .icon-close,
+[aria-expanded="true"] .icon-close {
+  display: block !important;
 }
 </style>
