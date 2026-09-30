@@ -1,64 +1,132 @@
 package theme
 
-import "html/template"
+import (
+	"html/template"
+	"strconv"
+	"strings"
+)
 
-// Theme contains design tokens and configuration for Forge components.
+// defaultThemeKey is the localStorage key used when Theme.StorageKey is empty.
+const defaultThemeKey = "krewire-theme"
+
+// Theme configures the light/dark theming system for an application or site.
+// It follows the system color scheme by default, persists the user's choice,
+// and switches between light and dark without server involvement.
 type Theme struct {
-	Name        string `json:"name"`
-	Primary     string `json:"primary"`
-	Secondary   string `json:"secondary"`
-	Accent      string `json:"accent"`
-	Background  string `json:"bg"`
-	Surface     string `json:"surface"`
-	Foreground  string `json:"fg"`
-	Muted       string `json:"muted"`
-	Border      string `json:"border"`
-	Success     string `json:"success"`
-	Warning     string `json:"warning"`
-	Error       string `json:"error"`
-	Radius      string `json:"radius"`
+	// Name is an optional identifier for the theme.
+	Name string `json:"name,omitempty"`
+	// StorageKey is the localStorage key persisting the user's choice.
+	// Defaults to "krewire-theme".
+	StorageKey string `json:"storage_key,omitempty"`
+	// Default is the initial preference when nothing is stored:
+	// "auto", "light", or "dark". Defaults to "auto".
+	Default string `json:"default,omitempty"`
+	// Light is the color palette for light mode. Empty fields fall back to
+	// DefaultLightPalette.
+	Light Palette `json:"light,omitempty"`
+	// Dark is the color palette for dark mode. Empty fields fall back to
+	// DefaultDarkPalette.
+	Dark Palette `json:"dark,omitempty"`
 }
 
-// Default returns the default pop-brutalist theme matching Krewire palette.
+// Default returns a new Theme initialized with default light and dark palettes.
 func Default() *Theme {
 	return &Theme{
-		Name:       "krewire",
-		Primary:    "#39D353",
-		Secondary:  "#00D1C1",
-		Accent:     "#FF3B2E",
-		Background: "#FAF8F4",
-		Surface:    "#f0ede5",
-		Foreground: "#0B1F3B",
-		Muted:      "#475569",
-		Border:     "#0B1F3B",
-		Success:    "#39D353",
-		Warning:    "#ffb703",
-		Error:      "#FF3B2E",
-		Radius:     "10px",
+		Name:    "krewire",
+		Default: "auto",
+		Light:   DefaultLightPalette,
+		Dark:    DefaultDarkPalette,
 	}
 }
 
-// CSS returns the complete CSS styles for Forge UI, Form, and Panel components.
+// New returns a new Theme with default settings.
+func New() *Theme {
+	return Default()
+}
+
+// WithStorageKey sets a custom localStorage key.
+func (t *Theme) WithStorageKey(key string) *Theme {
+	t.StorageKey = key
+	return t
+}
+
+// WithDefault sets the default mode ("auto", "light", or "dark").
+func (t *Theme) WithDefault(def string) *Theme {
+	t.Default = def
+	return t
+}
+
+// StorageKeyOrDefault returns the storage key or the default "krewire-theme".
+func (t Theme) StorageKeyOrDefault() string {
+	if t.StorageKey == "" {
+		return defaultThemeKey
+	}
+	return t.StorageKey
+}
+
+// DefaultTheme returns the configured default theme ("light", "dark", or "auto").
+func (t Theme) DefaultTheme() string {
+	switch t.Default {
+	case "light", "dark":
+		return t.Default
+	default:
+		return "auto"
+	}
+}
+
+// Style returns the <style> block declaring the color palette as CSS custom
+// properties on :root (light) and :root[data-theme="dark"] (dark), plus the
+// system-scheme fallback for pages without the attribute before the script
+// runs. Consumers may reference the tokens as var(--base-1),
+// var(--primary-content), and so on.
+func (t Theme) Style() template.CSS {
+	light := ":root{" + t.Light.CSSVars(DefaultLightPalette) + "}"
+	dark := ":root[data-theme=\"dark\"]{" + t.Dark.CSSVars(DefaultDarkPalette) + "}"
+	fallback := "@media (prefers-color-scheme: dark){:root:not([data-theme]){" +
+		t.Dark.CSSVars(DefaultDarkPalette) + "}}"
+	return template.CSS("<style>" + light + dark + fallback + "</style>")
+}
+
+// Script returns the inline <script> block for the document head, preceded by
+// the palette style. It applies the stored or system theme before first paint
+// (avoiding a flash of the wrong theme), keeps the color-scheme meta in sync,
+// and wires any element carrying the data-theme-toggle attribute to cycle
+// light and dark modes.
+func (t Theme) Script() template.HTML {
+	return template.HTML(string(t.Style()) + "<script>" + themeJS(t.StorageKeyOrDefault(), t.DefaultTheme()) + "</script>")
+}
+
+// Button returns the theme-switcher button markup: a sun/moon toggle that the
+// theme script wires automatically. Place it anywhere in the page.
+func (t Theme) Button() template.HTML {
+	return template.HTML(`<button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle light/dark theme" title="Toggle theme"><svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg><svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>`)
+}
+
+// CSS returns the complete CSS styles for Forge UI, Form, and Panel components
+// including base design tokens, mode vars, and pop-brutalist styling.
 func (t *Theme) CSS() template.CSS {
 	if t == nil {
 		t = Default()
 	}
 	return template.CSS(`
+` + ThemeModeVarsCSS + `
+` + ThemeToggleCSS + `
+
 :root {
-  --forge-primary: ` + t.Primary + `;
-  --forge-primary-content: #0B1F3B;
-  --forge-secondary: ` + t.Secondary + `;
-  --forge-secondary-content: #0B1F3B;
-  --forge-accent: ` + t.Accent + `;
-  --forge-bg: ` + t.Background + `;
-  --forge-surface: ` + t.Surface + `;
-  --forge-fg: ` + t.Foreground + `;
-  --forge-muted: ` + t.Muted + `;
-  --forge-border: ` + t.Border + `;
-  --forge-success: ` + t.Success + `;
-  --forge-warning: ` + t.Warning + `;
-  --forge-error: ` + t.Error + `;
-  --forge-radius: ` + t.Radius + `;
+  --forge-primary: var(--primary, ` + string(DefaultLightPalette.Primary) + `);
+  --forge-primary-content: var(--primary-content, ` + string(DefaultLightPalette.PrimaryContent) + `);
+  --forge-secondary: var(--secondary, ` + string(DefaultLightPalette.Secondary) + `);
+  --forge-secondary-content: var(--secondary-content, ` + string(DefaultLightPalette.SecondaryContent) + `);
+  --forge-accent: var(--accent, ` + string(DefaultLightPalette.Accent) + `);
+  --forge-bg: var(--base-1, ` + string(DefaultLightPalette.Base1) + `);
+  --forge-surface: var(--base-2, ` + string(DefaultLightPalette.Base2) + `);
+  --forge-fg: var(--base-1-content, ` + string(DefaultLightPalette.Base1Content) + `);
+  --forge-muted: var(--neutral-content, ` + string(DefaultLightPalette.NeutralContent) + `);
+  --forge-border: var(--base-1-content, ` + string(DefaultLightPalette.Base1Content) + `);
+  --forge-success: var(--success, ` + string(DefaultLightPalette.Success) + `);
+  --forge-warning: var(--warning, ` + string(DefaultLightPalette.Warning) + `);
+  --forge-error: var(--error, ` + string(DefaultLightPalette.Error) + `);
+  --forge-radius: 10px;
   --forge-pop-border: 2px solid var(--forge-border);
   --forge-pop-shadow: 3px 3px 0px var(--forge-border);
   --forge-pop-shadow-sm: 2px 2px 0px var(--forge-border);
@@ -67,18 +135,19 @@ func (t *Theme) CSS() template.CSS {
 }
 
 [data-theme="dark"], .dark {
-  --forge-primary: #39D353;
-  --forge-primary-content: #0B1F3B;
-  --forge-secondary: #00D1C1;
-  --forge-secondary-content: #0B1F3B;
-  --forge-bg: #0B1F3B;
-  --forge-surface: #112646;
-  --forge-fg: #FAF8F4;
-  --forge-muted: #8fa2bc;
-  --forge-border: #FAF8F4;
-  --forge-pop-border: 2px solid var(--forge-border);
-  --forge-pop-shadow: 3px 3px 0px var(--forge-border);
-  --forge-pop-shadow-sm: 2px 2px 0px var(--forge-border);
+  --forge-primary: var(--primary, ` + string(DefaultDarkPalette.Primary) + `);
+  --forge-primary-content: var(--primary-content, ` + string(DefaultDarkPalette.PrimaryContent) + `);
+  --forge-secondary: var(--secondary, ` + string(DefaultDarkPalette.Secondary) + `);
+  --forge-secondary-content: var(--secondary-content, ` + string(DefaultDarkPalette.SecondaryContent) + `);
+  --forge-accent: var(--accent, ` + string(DefaultDarkPalette.Accent) + `);
+  --forge-bg: var(--base-1, ` + string(DefaultDarkPalette.Base1) + `);
+  --forge-surface: var(--base-2, ` + string(DefaultDarkPalette.Base2) + `);
+  --forge-fg: var(--base-1-content, ` + string(DefaultDarkPalette.Base1Content) + `);
+  --forge-muted: var(--neutral-content, ` + string(DefaultDarkPalette.NeutralContent) + `);
+  --forge-border: var(--base-1-content, ` + string(DefaultDarkPalette.Base1Content) + `);
+  --forge-success: var(--success, ` + string(DefaultDarkPalette.Success) + `);
+  --forge-warning: var(--warning, ` + string(DefaultDarkPalette.Warning) + `);
+  --forge-error: var(--error, ` + string(DefaultDarkPalette.Error) + `);
 }
 
 .forge-app {
@@ -324,4 +393,11 @@ func (t *Theme) CSS() template.CSS {
 .forge-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
 .forge-grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
 `)
+}
+
+// themeJS generates the plain-JavaScript theming runtime.
+func themeJS(key, def string) string {
+	var b strings.Builder
+	b.WriteString(`(function(){var k=` + strconv.Quote(key) + `,d=` + strconv.Quote(def) + `,t=d;try{t=localStorage.getItem(k)||d}catch(e){}var m=window.matchMedia('(prefers-color-scheme: dark)');function apply(){var dark=t==='dark'||(t==='auto'&&m.matches);var r=document.documentElement;r.dataset.theme=dark?'dark':'light';r.style.colorScheme=dark?'dark':'light';var meta=document.querySelector('meta[name="color-scheme"]');if(meta)meta.content=dark?'dark':'light'}apply();if(m.addEventListener){m.addEventListener('change',function(){if(t==='auto')apply()})}window.krewireTheme={get:function(){return t},set:function(x){t=x;try{localStorage.setItem(k,x)}catch(e){}apply()},toggle:function(){var dark=t==='dark'||(t==='auto'&&m.matches);window.krewireTheme.set(dark?'light':'dark')}};document.addEventListener('click',function(e){var el=e.target&&e.target.closest?e.target.closest('[data-theme-toggle]'):null;if(el)window.krewireTheme.toggle()})})();`)
+	return b.String()
 }
