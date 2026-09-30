@@ -6,11 +6,15 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/krewire/forge/components"
 	"github.com/krewire/forge/form"
 	"github.com/krewire/forge/panel"
 	"github.com/krewire/forge/theme"
 	"github.com/krewire/forge/widget"
 )
+
+// ComponentsFS embeds all built-in UI components provided by Krewire Forge.
+var ComponentsFS = components.FS
 
 // DefaultTailwindCDN is the standard TailwindCSS Play CDN URL used by Forge by default.
 const DefaultTailwindCDN = "https://cdn.tailwindcss.com"
