@@ -110,3 +110,26 @@ func TestAppDashboard(t *testing.T) {
 		t.Errorf("missing stat in %s", body)
 	}
 }
+
+func TestAppTailwindDefaultAndOverride(t *testing.T) {
+	appDefault := New("Default App")
+	shellDefault := string(appDefault.RenderShell("Home", ""))
+	if !strings.Contains(shellDefault, "https://cdn.tailwindcss.com") {
+		t.Errorf("expected default Tailwind CDN injection, got %s", shellDefault)
+	}
+	if !strings.Contains(shellDefault, "tailwind.config") {
+		t.Errorf("expected default tailwind config, got %s", shellDefault)
+	}
+
+	appCustom := New("Custom App").WithTailwindURL("/custom/tailwind.css")
+	shellCustom := string(appCustom.RenderShell("Home", ""))
+	if !strings.Contains(shellCustom, `<link rel="stylesheet" href="/custom/tailwind.css">`) {
+		t.Errorf("expected custom stylesheet link, got %s", shellCustom)
+	}
+
+	appDisabled := New("No Tailwind").DisableTailwind()
+	shellDisabled := string(appDisabled.RenderShell("Home", ""))
+	if strings.Contains(shellDisabled, "tailwindcss") {
+		t.Errorf("expected no Tailwind when disabled, got %s", shellDisabled)
+	}
+}

@@ -12,6 +12,9 @@ import (
 	"github.com/krewire/forge/widget"
 )
 
+// DefaultTailwindCDN is the standard TailwindCSS Play CDN URL used by Forge by default.
+const DefaultTailwindCDN = "https://cdn.tailwindcss.com"
+
 // NavItem represents a link in the app navigation bar.
 type NavItem struct {
 	Label string
@@ -20,26 +23,42 @@ type NavItem struct {
 
 // App represents a programmatic web application built with Forge.
 type App struct {
-	Title    string
-	Theme    *theme.Theme
-	Nav      []NavItem
-	mux      *http.ServeMux
-	routes   map[string]bool
+	Title       string
+	Theme       *theme.Theme
+	Nav         []NavItem
+	TailwindURL string // Defaults to DefaultTailwindCDN ("https://cdn.tailwindcss.com").
+	mux         *http.ServeMux
+	routes      map[string]bool
 }
 
 // New creates a new Forge programmatic application builder.
+// By default, Krewire Forge uses TailwindCSS for modern utility styling.
 func New(title string) *App {
 	return &App{
-		Title:  title,
-		Theme:  theme.Default(),
-		mux:    http.NewServeMux(),
-		routes: make(map[string]bool),
+		Title:       title,
+		Theme:       theme.Default(),
+		TailwindURL: DefaultTailwindCDN,
+		mux:         http.NewServeMux(),
+		routes:      make(map[string]bool),
 	}
 }
 
 // WithTheme sets custom theme tokens.
 func (a *App) WithTheme(t *theme.Theme) *App {
 	a.Theme = t
+	return a
+}
+
+// WithTailwindURL configures a custom Tailwind stylesheet or script URL.
+// Pass a local stylesheet like "/assets/tailwind.css" or a custom CDN script URL.
+func (a *App) WithTailwindURL(url string) *App {
+	a.TailwindURL = url
+	return a
+}
+
+// DisableTailwind disables automatic TailwindCSS injection.
+func (a *App) DisableTailwind() *App {
+	a.TailwindURL = ""
 	return a
 }
 
@@ -120,6 +139,33 @@ func (a *App) RenderShell(pageTitle string, content template.HTML) template.HTML
 	b.WriteString("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n")
 	b.WriteString("  <title>" + template.HTMLEscapeString(title) + "</title>\n")
 	b.WriteString("  <style>\n" + string(a.Theme.CSS()) + "\n</style>\n")
+
+	if a.TailwindURL != "" {
+		if strings.HasSuffix(a.TailwindURL, ".css") {
+			b.WriteString(`  <link rel="stylesheet" href="` + template.HTMLEscapeString(a.TailwindURL) + `">` + "\n")
+		} else {
+			b.WriteString(`  <script src="` + template.HTMLEscapeString(a.TailwindURL) + `"></script>` + "\n")
+			b.WriteString(`  <script>
+    tailwind.config = {
+      darkMode: ['class', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          colors: {
+            primary: 'var(--forge-primary, #39D353)',
+            'primary-content': 'var(--forge-primary-content, #0B1F3B)',
+            secondary: 'var(--forge-secondary, #00D1C1)',
+            'secondary-content': 'var(--forge-secondary-content, #0B1F3B)',
+            accent: 'var(--forge-accent, #FF3B2E)',
+            surface: 'var(--forge-surface, #f0ede5)',
+            muted: 'var(--forge-muted, #475569)',
+          }
+        }
+      }
+    }
+  </script>` + "\n")
+		}
+	}
+
 	b.WriteString("</head>\n<body class=\"forge-app\">\n")
 
 	// Top Navigation

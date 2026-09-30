@@ -8,10 +8,11 @@ Forge provides a pure Go, zero-npm, zero-bloat toolkit for constructing interact
 
 ## Features
 
+- **TailwindCSS by Default**: Zero-setup utility-first styling powered by TailwindCSS out-of-the-box, pre-configured with Krewire pop-brutalist theme tokens and dark mode support.
 - **Built-in UI Component & Widget System**: Rich set of primitives (`Button`, `Badge`, `Card`, `Alert`, `Table`, `Modal`, `Divider`) and responsive layouts (`VStack`, `HStack`, `Grid`).
 - **Form Builder**: Declarative field construction, type-safe validation, error messages, and request binding (`TextField`, `Email`, `Number`, `Select`, `Checkbox`, `Textarea`).
 - **Panel & Dashboard Builder**: Clean metric stat cards (`Stat`), content containers (`Panel`), and responsive dashboards (`Dashboard`).
-- **Application Engine**: Programmatic routing, page shell generation, and cohesive theming matching Krewire's high-contrast / pop-brutalist palette with full dark mode support.
+- **Application Engine**: Programmatic routing, page shell generation, and cohesive theming with light/dark palettes and toggle runtime.
 - **Zero JS Fatigue**: Server-rendered HTML with progressive enhancement, zero client bundlers, and sub-millisecond cold starts.
 
 ---

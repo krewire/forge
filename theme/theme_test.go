@@ -67,3 +67,14 @@ func TestThemeCSS(t *testing.T) {
 		t.Errorf("CSS missing .forge-btn")
 	}
 }
+
+func TestThemeTailwindConfigScript(t *testing.T) {
+	th := Default()
+	s := string(th.TailwindConfigScript())
+	if !strings.Contains(s, "tailwind.config") {
+		t.Errorf("missing tailwind.config in %s", s)
+	}
+	if !strings.Contains(s, "var(--forge-primary") {
+		t.Errorf("missing forge color token mapping in %s", s)
+	}
+}
