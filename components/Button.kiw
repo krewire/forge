@@ -1,14 +1,22 @@
 {{if .Href}}
 <a href="{{.Href}}" class="btn {{if .Variant}}btn-{{.Variant}}{{else}}btn-primary{{end}} {{if .Size}}btn-{{.Size}}{{else}}btn-md{{end}} {{.Class}}" {{with .Target}}target="{{.}}" rel="noopener"{{end}} {{if .Disabled}}aria-disabled="true" tabindex="-1"{{end}}>
-  {{with .Icon}}<span class="btn-icon">{{.}}</span>{{end}}
-  <span class="btn-text">{{with .Text}}{{.}}{{else}}{{with .Label}}{{.}}{{end}}{{end}}</span>
-  {{with .IconRight}}<span class="btn-icon-right">{{.}}</span>{{end}}
+  {{if .Body}}
+    {{.Body}}
+  {{else}}
+    {{with .Icon}}<span class="btn-icon">{{.}}</span>{{end}}
+    {{if or .Text .Label}}<span class="btn-text">{{with .Text}}{{.}}{{else}}{{with .Label}}{{.}}{{end}}{{end}}</span>{{end}}
+    {{with .IconRight}}<span class="btn-icon-right">{{.}}</span>{{end}}
+  {{end}}
 </a>
 {{else}}
-<button type="{{with .Type}}{{.}}{{else}}button{{end}}" class="btn {{if .Variant}}btn-{{.Variant}}{{else}}btn-primary{{end}} {{if .Size}}btn-{{.Size}}{{else}}btn-md{{end}} {{.Class}}" {{if .Disabled}}disabled{{end}} {{with .OnClick}}onclick="{{.}}"{{end}} {{with .Id}}id="{{.}}"{{end}} {{with .AriaLabel}}aria-label="{{.}}"{{end}}>
-  {{with .Icon}}<span class="btn-icon">{{.}}</span>{{end}}
-  <span class="btn-text">{{with .Text}}{{.}}{{else}}{{with .Label}}{{.}}{{end}}{{end}}</span>
-  {{with .IconRight}}<span class="btn-icon-right">{{.}}</span>{{end}}
+<button type="{{with .Type}}{{.}}{{else}}button{{end}}" class="btn {{if .Variant}}btn-{{.Variant}}{{else}}btn-primary{{end}} {{if .Size}}btn-{{.Size}}{{else}}btn-md{{end}} {{.Class}}" {{if .Disabled}}disabled{{end}} {{with .OnClick}}onclick="{{.}}"{{end}} {{with .Id}}id="{{.}}"{{end}} {{with .AriaLabel}}aria-label="{{.}}"{{end}} {{with .AriaControls}}aria-controls="{{.}}"{{end}} {{with .AriaExpanded}}aria-expanded="{{.}}"{{end}} {{with .AriaPressed}}aria-pressed="{{.}}"{{end}}>
+  {{if .Body}}
+    {{.Body}}
+  {{else}}
+    {{with .Icon}}<span class="btn-icon">{{.}}</span>{{end}}
+    {{if or .Text .Label}}<span class="btn-text">{{with .Text}}{{.}}{{else}}{{with .Label}}{{.}}{{end}}{{end}}</span>{{end}}
+    {{with .IconRight}}<span class="btn-icon-right">{{.}}</span>{{end}}
+  {{end}}
 </button>
 {{end}}
 
