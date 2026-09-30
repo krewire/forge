@@ -1,50 +1,20 @@
-<button class="theme-switch" data-theme-toggle aria-label="Toggle theme" onclick="window.krewireTheme.toggle()">
+<button class="theme-switch btn w-9 h-9 p-0 min-h-0 text-base flex items-center justify-center rounded-full"
+        data-theme-toggle
+        aria-label="Toggle theme"
+        onclick="window.krewireTheme.toggle()">
   <span class="sun sun-icon">☀</span>
   <span class="moon moon-icon">☾</span>
 </button>
 
 <style>
-.theme-switch {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border-radius: 999px;
-  border: 1.5px solid var(--border);
-  background: var(--bg-2);
-  color: var(--fg);
-  cursor: pointer;
-  font-size: 1rem;
-  line-height: 1;
-  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-.theme-switch:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  transform: scale(1.05);
-}
-.sun, .sun-icon {
-  display: var(--show-sun, inline-block);
-}
-.moon, .moon-icon {
-  display: var(--show-moon, none);
-}
-:root[data-theme="dark"] .sun,
-:root[data-theme="dark"] .sun-icon,
-html[data-theme="dark"] .sun,
+.sun-icon { display: var(--show-sun, inline); }
+.moon-icon { display: var(--show-moon, none); }
 html[data-theme="dark"] .sun-icon,
-.dark .sun,
 .dark .sun-icon {
   display: none !important;
 }
-:root[data-theme="dark"] .moon,
-:root[data-theme="dark"] .moon-icon,
-html[data-theme="dark"] .moon,
 html[data-theme="dark"] .moon-icon,
-.dark .moon,
 .dark .moon-icon {
-  display: inline-block !important;
+  display: inline !important;
 }
 </style>

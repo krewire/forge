@@ -1,4 +1,4 @@
-<button class="toggle toggler {{.Class}}"
+<button class="toggle md:hidden btn w-9 h-9 p-0 min-h-0 flex flex-col items-center justify-center gap-1 {{.Class}}"
         id="{{if .ID}}{{.ID}}{{else}}nav-toggler{{end}}"
         aria-label="{{if .Label}}{{.Label}}{{else}}Toggle navigation menu{{end}}"
         aria-expanded="false"
@@ -13,26 +13,6 @@
 </button>
 
 <style>
-.toggle, .toggler {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg-2);
-  color: var(--fg);
-  cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
-}
-.toggle:hover, .toggler:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
 .toggler-bar {
   display: block;
   width: 16px;
@@ -41,13 +21,13 @@
   border-radius: 2px;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
-[aria-expanded="true"] .bar-1 {
+.toggle[aria-expanded="true"] .bar-1 {
   transform: translateY(6px) rotate(45deg);
 }
-[aria-expanded="true"] .bar-2 {
+.toggle[aria-expanded="true"] .bar-2 {
   opacity: 0;
 }
-[aria-expanded="true"] .bar-3 {
+.toggle[aria-expanded="true"] .bar-3 {
   transform: translateY(-6px) rotate(-45deg);
 }
 </style>
