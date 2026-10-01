@@ -68,6 +68,20 @@ func TestThemeCSS(t *testing.T) {
 	}
 }
 
+func TestThemeCSSScrollbar(t *testing.T) {
+	css := string(Default().CSS())
+	for _, want := range []string{
+		"--forge-scrollbar-thumb: var(--forge-primary)",
+		"scrollbar-color: var(--forge-scrollbar-thumb) var(--forge-scrollbar-track)",
+		"::-webkit-scrollbar",
+		"::-webkit-scrollbar-thumb",
+	} {
+		if !strings.Contains(css, want) {
+			t.Errorf("CSS missing scrollbar rule %q", want)
+		}
+	}
+}
+
 func TestThemeTailwindConfigScript(t *testing.T) {
 	th := Default()
 	s := string(th.TailwindConfigScript())
