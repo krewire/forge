@@ -1,8 +1,8 @@
 <header class="sticky top-0 z-50 bg-bg dark:bg-bg-dark border-b border-pop w-full navbar" style="border-bottom:var(--pop-border)">
   <div class="container-site flex items-center justify-between gap-3 py-3">
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 min-w-0">
       {{if .ShowSidebarToggle}}
-      <Hamburger ID="site-sidebar-toggle" Label="Open navigation" Controls="site-sidebar" Class="lg:hidden sidebar-toggle" />
+      <Hamburger ID="site-sidebar-toggle" Label="Open navigation" Controls="site-sidebar" Class="lg:hidden sidebar-toggle shrink-0" />
       {{end}}
       <Brand Version=.Version Badge=.BrandBadge BadgeI18n=.BrandBadgeI18n />
     </div>
@@ -15,7 +15,7 @@
       {{end}}
     </div>
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 shrink-0">
       {{if .ShowLangToggle}}
       <LangSwitch />
       {{end}}
@@ -27,7 +27,7 @@
       </a>
       {{end}}
       <ThemeSwitch />
-      <Hamburger ID="nav-toggler" Label="Toggle menu" Controls="nav-mobile-menu" Class="lg:hidden" />
+      <Hamburger ID="nav-toggler" Label="Toggle menu" Controls="nav-mobile-menu" Class="lg:hidden shrink-0" />
     </div>
   </div>
 
