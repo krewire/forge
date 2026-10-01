@@ -6,6 +6,7 @@
   aria-label="{{if .Label}}{{.Label}}{{else}}Toggle navigation{{end}}"
   aria-expanded="{{if .Expanded}}{{.Expanded}}{{else}}false{{end}}"
   {{with .Controls}}aria-controls="{{.}}"{{end}}
+  {{with .DataDrawerToggle}}data-drawer-toggle="{{.}}"{{end}}
   {{with .OnClick}}onclick="{{.}}"{{end}}
   data-kiw-component="Hamburger">
   <span class="hamburger-box" aria-hidden="true" style="position: relative; display: flex; flex-direction: column; justify-content: space-between; width: 1.125rem; height: 0.875rem; flex-shrink: 0;">

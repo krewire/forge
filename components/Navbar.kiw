@@ -27,40 +27,34 @@
       </a>
       {{end}}
       <ThemeSwitch />
-      <Hamburger ID="nav-toggler" Label="Toggle menu" Controls="nav-mobile-menu" Class="lg:hidden shrink-0" />
+      <Hamburger ID="nav-toggler" Label="Toggle menu" Controls="nav-mobile-menu" DataDrawerToggle="nav-mobile-menu" Class="lg:hidden shrink-0" />
     </div>
   </div>
 
   <!-- Mobile navigation drawer -->
-  <div id="nav-mobile-menu"
-       class="lg:hidden opacity-0 pointer-events-none -translate-y-2 absolute top-full left-0 w-full bg-bg dark:bg-bg-dark border-b border-pop shadow-xl transition-all duration-200"
-       style="border-bottom:var(--pop-border)">
-    <div class="container-site py-4 flex flex-col gap-1">
-      {{if .MobileMenu}}
-        {{.MobileMenu}}
-      {{else}}
-        <a href="/getting-started" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
-          <span class="text-primary w-4 font-black">›</span> Get Started
-        </a>
-        <a href="/docs/krewire-workloads" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
-          <span class="text-primary w-4 font-black">▦</span> 8 Workloads
-        </a>
-        <a href="/getting-started/dsl" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
-          <span class="text-primary w-4 font-black">◈</span> Component DSL
-        </a>
-        <a href="/docs" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
-          <span class="text-primary w-4 font-black">≡</span> Documentation
-        </a>
-        <a href="/#ecosystem" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
-          <span class="text-primary w-4 font-black">⬢</span> Ecosystem
-        </a>
-        <hr class="my-1" style="border-color:var(--pop-border); border-width:1.5px">
-        <a href="https://github.com/krewire/krewire" target="_blank" rel="noopener"
-           class="mobile-link flex items-center justify-between gap-3 px-3 py-3 rounded-lg font-extrabold text-sm min-h-[44px] btn-primary transition-all duration-150"
-           style="border:var(--pop-border-thin); box-shadow:var(--pop-shadow-sm)">
-          <span>★ GitHub Repository</span><span>↗</span>
-        </a>
-      {{end}}
+  <Drawer ID="nav-mobile-menu" Side="right" Title="Menu" Class="lg:hidden">
+    <div class="flex flex-col gap-1">
+      <a href="/getting-started" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
+        <span class="text-primary w-4 font-black">›</span> Get Started
+      </a>
+      <a href="/docs/krewire-workloads" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
+        <span class="text-primary w-4 font-black">▦</span> 8 Workloads
+      </a>
+      <a href="/getting-started/dsl" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
+        <span class="text-primary w-4 font-black">◈</span> Component DSL
+      </a>
+      <a href="/docs" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
+        <span class="text-primary w-4 font-black">≡</span> Documentation
+      </a>
+      <a href="/#ecosystem" class="mobile-link flex items-center gap-3 px-3 py-3 rounded-lg font-extrabold text-sm text-fg dark:text-fg-dark min-h-[44px] hover:bg-bg-2 dark:hover:bg-bg-dark-2 transition-all duration-150">
+        <span class="text-primary w-4 font-black">⬢</span> Ecosystem
+      </a>
+      <hr class="my-2" style="border-color:var(--pop-border); border-width:1.5px">
+      <a href="https://github.com/krewire/krewire" target="_blank" rel="noopener"
+         class="mobile-link flex items-center justify-between gap-3 px-3 py-3 rounded-lg font-extrabold text-sm min-h-[44px] btn-primary transition-all duration-150"
+         style="border:var(--pop-border-thin); box-shadow:var(--pop-shadow-sm)">
+        <span>★ GitHub Repository</span><span>↗</span>
+      </a>
     </div>
-  </div>
+  </Drawer>
 </header>
